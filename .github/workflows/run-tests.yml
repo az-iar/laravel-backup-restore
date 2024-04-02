@@ -37,6 +37,20 @@ jobs:
           - 3306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: laravel_backup_restore
+        ports:
+          - 5432/tcp
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
 
     steps:
@@ -76,8 +90,8 @@ jobs:
           MYSQL_USERNAME: root
           MYSQL_PASSWORD: 'password'
           MYSQL_DATABASE: laravel_backup_restore
-          PGSQL_HOST: localhost
+          PGSQL_HOST: 127.0.0.1
           PGSQL_PORT: 5432
           PGSQL_USERNAME: postgres
-          PGSQL_PASSWORD: postgres
+          PGSQL_PASSWORD: password
           PGSQL_DATABASE: laravel_backup_restore
